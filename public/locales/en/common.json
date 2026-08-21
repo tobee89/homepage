@@ -962,6 +962,16 @@
       "showReclaimable": "Show Reclaimable",
       "totalCapacity": "Total Capacity"
     },
+    "netbird": {
+        "peers": "Peers",
+        "online": "Online",
+        "users": "Users",
+        "groups": "Groups",
+        "login_expired": "Login Expired",
+        "version": "Version",
+        "update": "Update",
+        "up_to_date": "Up to date"
+    },
     "netdata": {
       "warnings": "Warnings",
       "criticals": "Criticals"
