@@ -31,42 +31,38 @@ export default function Component({ service }) {
 
   const MAX_ALLOWED_FIELDS = 4;
   if (widget.fields?.length === 0 || !widget.fields) {
-    widget.fields = ["online", "users", "groups", "version"];
+    widget.fields = ["online", "users", "version", "current_version"];
   } else if (widget.fields?.length > MAX_ALLOWED_FIELDS) {
     widget.fields = widget.fields.slice(0, MAX_ALLOWED_FIELDS);
   }
 
-  // setup-keys requires an admin token, so it is only requested when the field
-  // is actually displayed. An empty endpoint makes useWidgetAPI skip the call.
-  const setupKeysEndpoint = widget.fields.includes("setup_keys") ? "setupKeys" : "";
+  // The user list requires an admin token, so it is only requested when the
+  // field is displayed. An empty endpoint makes useWidgetAPI skip the call.
+  const usersEndpoint = widget.fields.includes("users") ? "users" : "";
 
   const { data: peersData, error: peersError } = useWidgetAPI(widget, "peers");
-  const { data: usersData, error: usersError } = useWidgetAPI(widget, "users");
-  const { data: groupsData, error: groupsError } = useWidgetAPI(widget, "groups");
   const { data: versionData, error: versionError } = useWidgetAPI(widget, "version");
-  const { data: setupKeysData, error: setupKeysError } = useWidgetAPI(widget, setupKeysEndpoint);
+  const { data: usersData, error: usersError } = useWidgetAPI(widget, usersEndpoint);
 
-  const error = peersError ?? usersError ?? groupsError ?? versionError ?? setupKeysError;
+  const error = peersError ?? versionError ?? usersError;
 
   if (error) {
     return <Container service={service} error={error} />;
   }
 
-  if (!peersData || !usersData || !groupsData || !versionData || (setupKeysEndpoint && !setupKeysData)) {
+  if (!peersData || !versionData || (usersEndpoint && !usersData)) {
     return (
       <Container service={service}>
-          <Block label="netbird.online" />
+        <Block label="netbird.online" />
         <Block label="netbird.users" />
-        <Block label="netbird.groups" />
         <Block label="netbird.version" />
+        <Block label="netbird.current_version" />
       </Container>
     );
   }
 
   const peers = Array.isArray(peersData) ? peersData : [];
   const users = Array.isArray(usersData) ? usersData : [];
-  const groups = Array.isArray(groupsData) ? groupsData : [];
-  const setupKeys = Array.isArray(setupKeysData) ? setupKeysData : [];
 
   const currentVersion = versionData.management_current_version;
 
@@ -74,7 +70,6 @@ export default function Component({ service }) {
   const loginExpired = peers.filter((peer) => peer.login_expired).length;
   const outdated = peers.filter((peer) => isOlder(peer.version, currentVersion)).length;
   const humanUsers = users.filter((user) => !user.is_service_user).length;
-  const validKeys = setupKeys.filter((key) => key.valid && !key.revoked).length;
 
   const versionStatus = versionData.management_update_available
     ? t("netbird.update_available")
@@ -88,10 +83,8 @@ export default function Component({ service }) {
         value={`${t("common.number", { value: online })} / ${t("common.number", { value: peers.length })}`}
       />
       <Block label="netbird.users" value={t("common.number", { value: humanUsers })} />
-      <Block label="netbird.groups" value={t("common.number", { value: groups.length })} />
       <Block label="netbird.login_expired" value={t("common.number", { value: loginExpired })} />
       <Block label="netbird.outdated" value={t("common.number", { value: outdated })} />
-      <Block label="netbird.setup_keys" value={t("common.number", { value: validKeys })} />
       <Block label="netbird.version" value={versionStatus} />
       <Block label="netbird.current_version" value={currentVersion} />
     </Container>

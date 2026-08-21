@@ -11,12 +11,6 @@ const widget = {
     users: {
       endpoint: "users",
     },
-    groups: {
-      endpoint: "groups",
-    },
-    setupKeys: {
-      endpoint: "setup-keys",
-    },
     version: {
       endpoint: "instance/version",
     },
