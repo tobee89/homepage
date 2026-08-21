@@ -31,7 +31,7 @@ export default function Component({ service }) {
 
   const MAX_ALLOWED_FIELDS = 4;
   if (widget.fields?.length === 0 || !widget.fields) {
-    widget.fields = ["peers", "online", "users", "groups"];
+    widget.fields = ["online", "users", "groups", "version"];
   } else if (widget.fields?.length > MAX_ALLOWED_FIELDS) {
     widget.fields = widget.fields.slice(0, MAX_ALLOWED_FIELDS);
   }
@@ -55,10 +55,10 @@ export default function Component({ service }) {
   if (!peersData || !usersData || !groupsData || !versionData || (setupKeysEndpoint && !setupKeysData)) {
     return (
       <Container service={service}>
-        <Block label="netbird.peers" />
-        <Block label="netbird.online" />
+          <Block label="netbird.online" />
         <Block label="netbird.users" />
         <Block label="netbird.groups" />
+        <Block label="netbird.version" />
       </Container>
     );
   }
@@ -76,21 +76,24 @@ export default function Component({ service }) {
   const humanUsers = users.filter((user) => !user.is_service_user).length;
   const validKeys = setupKeys.filter((key) => key.valid && !key.revoked).length;
 
-  const updateAvailable = versionData.management_update_available
-    ? versionData.management_available_version
+  const versionStatus = versionData.management_update_available
+    ? t("netbird.update_available")
     : t("netbird.up_to_date");
 
   return (
     <Container service={service}>
       <Block label="netbird.peers" value={t("common.number", { value: peers.length })} />
-      <Block label="netbird.online" value={t("common.number", { value: online })} />
+      <Block
+        label="netbird.online"
+        value={`${t("common.number", { value: online })} / ${t("common.number", { value: peers.length })}`}
+      />
       <Block label="netbird.users" value={t("common.number", { value: humanUsers })} />
       <Block label="netbird.groups" value={t("common.number", { value: groups.length })} />
       <Block label="netbird.login_expired" value={t("common.number", { value: loginExpired })} />
       <Block label="netbird.outdated" value={t("common.number", { value: outdated })} />
       <Block label="netbird.setup_keys" value={t("common.number", { value: validKeys })} />
-      <Block label="netbird.version" value={currentVersion} />
-      <Block label="netbird.update" value={updateAvailable} />
+      <Block label="netbird.version" value={versionStatus} />
+      <Block label="netbird.current_version" value={currentVersion} />
     </Container>
   );
 }

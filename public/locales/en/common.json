@@ -971,8 +971,9 @@
         "outdated": "Outdated",
         "setup_keys": "Setup Keys",
         "version": "Version",
-        "update": "Update",
-        "up_to_date": "Up to date"
+        "current_version": "Current Version",
+        "up_to_date": "Up to date",
+        "update_available": "Update available"
     },
     "netdata": {
       "warnings": "Warnings",
