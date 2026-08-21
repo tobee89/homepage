@@ -14,6 +14,9 @@ const widget = {
     groups: {
       endpoint: "groups",
     },
+    setupKeys: {
+      endpoint: "setup-keys",
+    },
     version: {
       endpoint: "instance/version",
     },

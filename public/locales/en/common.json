@@ -968,6 +968,8 @@
         "users": "Users",
         "groups": "Groups",
         "login_expired": "Login Expired",
+        "outdated": "Outdated",
+        "setup_keys": "Setup Keys",
         "version": "Version",
         "update": "Update",
         "up_to_date": "Up to date"
